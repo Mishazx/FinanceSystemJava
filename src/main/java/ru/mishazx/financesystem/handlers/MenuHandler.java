@@ -1,7 +1,9 @@
 package ru.mishazx.financesystem.handlers;
 
+import ru.mishazx.financesystem.models.Transaction;
 import ru.mishazx.financesystem.services.AuthService;
 import ru.mishazx.financesystem.services.DataService;
+import ru.mishazx.financesystem.services.WalletService;
 import ru.mishazx.financesystem.utils.CustomIO;
 
 import java.io.Console;
@@ -59,18 +61,21 @@ public class MenuHandler {
                 String choice = readChoice();
                 switch (choice.toUpperCase()) {
                     case "1":
-                        double balance = DataService.checkBalance(user_id);
+                        double balance = WalletService.checkBalance(user_id);
                         CustomIO.PrintSuccess("Ваш баланс: " + balance);
                         break;
                     case "2":
-                        DataService.addTransaction(user_id);
+                        WalletService.addTransaction(user_id);
                         break;
                     case "3":
+                        WalletService.getAllTransaction(user_id);
+                        break;
+                    case "4":
                         CustomIO.PrintSuccess("Выходим из системы! ");
                         user_id = null;
                         isAuthenticated = false;
                         break;
-                    case "4":
+                    case "5":
                         System.exit(0);
                         break;
                     default:
@@ -103,5 +108,21 @@ public class MenuHandler {
     public static boolean askToNoRetry() {
         String response = scanner.nextLine().toLowerCase();
         return !response.equalsIgnoreCase("нет");
+    }
+
+    public static Transaction askToTransaction() {
+        Scanner scanner = new Scanner(System.in);
+
+        System.out.print("Введите сумму транзакции: ");
+        double amount = scanner.nextDouble();
+
+        System.out.print("Введите категорию транзакции: ");
+        String category = scanner.next();
+
+        System.out.print("Это доход? (да/нет): ");
+        String incomeResponse = scanner.next();
+        Boolean isIncome = incomeResponse.equalsIgnoreCase("да");
+
+        return new Transaction(amount, category, isIncome);
     }
 }

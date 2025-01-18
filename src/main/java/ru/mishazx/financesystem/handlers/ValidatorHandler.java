@@ -1,5 +1,6 @@
 package ru.mishazx.financesystem.handlers;
 
+import ru.mishazx.financesystem.exceptions.InvalidAmountException;
 import ru.mishazx.financesystem.exceptions.InvalidLoginException;
 import ru.mishazx.financesystem.exceptions.InvalidPasswordException;
 
@@ -8,6 +9,8 @@ import java.util.regex.Pattern;
 public class ValidatorHandler {
     private static final Pattern latinOnlyPattern = Pattern.compile("^[a-zA-Z0-9@#$%^&+=!]*$");
     private static final Pattern loginPattern = Pattern.compile("^[a-zA-Z0-9._-]*$");
+
+    private static final double MAX_AMOUNT = 999999999.00;
 
     public static String validLogin(String login) throws InvalidLoginException {
         if (!isLoginValid(login)) {
@@ -45,37 +48,77 @@ public class ValidatorHandler {
 
     private static boolean isPasswordValid(String password) throws InvalidPasswordException {
         StringBuilder errorMessage = new StringBuilder("Пароль не соответствует следующим требованиям:");
+        boolean isValid = true;
 
         if (password == null || password.isEmpty()) {
             errorMessage.append("\n- Пароль не может быть пустым");
+            isValid = false;
         } else {
-            if (password.length() < 8) {
-                errorMessage.append("\n- Пароль должен быть длиннее 8 символов");
-            }
-            if (!password.matches(".*[0-9].*")) {
-                errorMessage.append("\n- Пароль должен содержать хотя бы одну цифру");
-            }
-            if (!password.matches(".*[a-z].*")) {
-                errorMessage.append("\n- Пароль должен содержать хотя бы одну английскую строчную букву");
-            }
-            if (!password.matches(".*[A-Z].*")) {
-                errorMessage.append("\n- Пароль должен содержать хотя бы одну английскую заглавную букву");
-            }
-            if (!password.matches(".*[@#$%^&+=!].*")) {
-                errorMessage.append("\n- Пароль должен содержать хотя бы один специальный символ из набора @#$%^&+=!");
-            }
-            if (password.contains(" ")) {
-                errorMessage.append("\n- Пароль не должен содержать пробелы");
-            }
-            if (!latinOnlyPattern.matcher(password).matches()) {
-                errorMessage.append("\n- Пароль должен содержать только латинские буквы, цифры и специальные символы");
+            String[] requirements = {
+                    "должен быть длиннее 8 символов",
+                    "должен содержать хотя бы одну цифру",
+                    "должен содержать хотя бы одну английскую строчную букву",
+                    "должен содержать хотя бы одну английскую заглавную букву",
+                    "должен содержать хотя бы один специальный символ из набора @#$%^&+=!",
+                    "не должен содержать пробелы",
+                    "должен содержать только латинские буквы, цифры и специальные символы"
+            };
+
+            boolean[] checks = {
+                    password.length() >= 8,
+                    password.matches(".*[0-9].*"),
+                    password.matches(".*[a-z].*"),
+                    password.matches(".*[A-Z].*"),
+                    password.matches(".*[@#$%^&+=!].*"),
+                    !password.contains(" "),
+                    latinOnlyPattern.matcher(password).matches()
+            };
+
+            for (int i = 0; i < requirements.length; i++) {
+                if (!checks[i]) {
+                    errorMessage.append("\n- Пароль " + requirements[i]);
+                    isValid = false;
+                }
             }
         }
 
-        if (errorMessage.length() > 46) {
+        if (!isValid) {
             throw new InvalidPasswordException(errorMessage.toString());
         }
 
         return true;
+    }
+
+    private static double getAmount(String amountStr) throws InvalidAmountException {
+        String sanitizedAmountStr = amountStr.trim().replace(',', '.');
+
+        if (!sanitizedAmountStr.matches("^[0-9]+(\\.[0-9]{1,2})?$")) {
+            throw new InvalidAmountException("Некорректный формат суммы! Используйте числа и точку для копеек.");
+        }
+
+        double amount;
+        try {
+            amount = Double.parseDouble(sanitizedAmountStr);
+        } catch (NumberFormatException e) {
+            throw new InvalidAmountException("Ошибка при преобразовании суммы. Пожалуйста, проверьте ввод.");
+        }
+        return amount;
+    }
+
+    public static double validateAmount(String amountStr) throws InvalidAmountException {
+        if (amountStr == null || amountStr.trim().isEmpty()) {
+            throw new InvalidAmountException("Сумма не может быть пустой!");
+        }
+
+        double amount = getAmount(amountStr);
+
+        if (amount <= 0) {
+            throw new InvalidAmountException("Сумма должна быть больше нуля!");
+        }
+        if (amount > MAX_AMOUNT) {
+            throw new InvalidAmountException(String.format("Слишком большая сумма! Максимум %.2f", MAX_AMOUNT));
+        }
+
+        return amount;
     }
 }

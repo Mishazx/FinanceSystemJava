@@ -4,19 +4,19 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonSyntaxException;
 import com.google.gson.reflect.TypeToken;
-import ru.mishazx.financesystem.models.User;
+import ru.mishazx.financesystem.models.Data; // Импортируйте новый класс Data
 import ru.mishazx.financesystem.utils.CustomIO;
+import ru.mishazx.financesystem.utils.LocalDateTimeAdapter;
 
 import java.io.*;
 import java.lang.reflect.Type;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
+import java.time.LocalDateTime;
 
 public class DataFileService {
     public static final String DATABASE_FILE = "main.json";
-    private static final Type USER_LIST_TYPE = new TypeToken<List<User>>(){}.getType();
+    private static final Type DATA_TYPE = new TypeToken<Data>(){}.getType();
     private static final Gson GSON = new GsonBuilder()
+            .registerTypeAdapter(LocalDateTime.class, new LocalDateTimeAdapter())
             .setPrettyPrinting()
             .create();
 
@@ -26,7 +26,7 @@ public class DataFileService {
             try {
                 if (db_file.createNewFile()) {
                     try (Writer writer = new FileWriter(db_file)) {
-                        GSON.toJson(new ArrayList<User>(), USER_LIST_TYPE, writer); // Сохраняем пустой массив
+                        GSON.toJson(new Data(), DATA_TYPE, writer); // Сохраняем пустой объект Data
                     }
                     CustomIO.PrintSuccess("[ИНФО] - Создан новый файл базы данных: " + DATABASE_FILE);
                     return false;
@@ -40,33 +40,35 @@ public class DataFileService {
         return false;
     }
 
-    public static void saveData(List<User> users) {
+    public static void saveData(Data data) {
         if (checkData()) {
             return;
         }
 
         try (Writer writer = new FileWriter(DATABASE_FILE)) {
-            GSON.toJson(users, USER_LIST_TYPE, writer); // Сохраняем список пользователей как массив
+            String json = GSON.toJson(data);
+            CustomIO.PrintDebug("[ИНФО] - Сохраняем в json:" + json);
+            GSON.toJson(data, DATA_TYPE, writer);
         } catch (IOException e) {
             CustomIO.PrintError("Ошибка при сохранении данных: " + e.getMessage(), true);
         }
     }
 
-    public static List<User> loadData() {
+    public static Data loadData() {
         if (checkData()) {
-            return new ArrayList<>();
+            return new Data(); // Возвращаем новый объект Data
         }
 
         try (Reader reader = new FileReader(DATABASE_FILE)) {
-            List<User> loadedUsers = GSON.fromJson(reader, USER_LIST_TYPE);
-            if (loadedUsers == null) {
-                CustomIO.PrintError("[ИНФО] - Данные пользователей не загружены, файл может быть пустым или поврежденным.", true);
-                return new ArrayList<>();
+            Data loadedData = GSON.fromJson(reader, DATA_TYPE);
+            if (loadedData == null) {
+                CustomIO.PrintError("[ИНФО] - Данные не загружены, файл может быть пустым или поврежденным.", true);
+                return new Data();
             }
-            return loadedUsers;
+            return loadedData;
         } catch (IOException | JsonSyntaxException e) {
             CustomIO.PrintError("Ошибка при загрузке данных: " + e.getMessage(), true);
-            return new ArrayList<>();
+            return new Data();
         }
     }
 }

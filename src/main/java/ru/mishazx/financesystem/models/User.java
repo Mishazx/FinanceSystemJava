@@ -1,21 +1,18 @@
 package ru.mishazx.financesystem.models;
 
-import ru.mishazx.financesystem.utils.PasswordHasher;
-
 import java.util.UUID;
 
 public class User {
     private final UUID id;
     private final String username;
     private final String password;
-//    private final String salt;
+    private final Wallet wallet;
 
     public User (String username, String password) {
         this.id = UUID.randomUUID();
         this.username = username;
-//        this.salt = PasswordHasher.generateSalt();
         this.password = password;
-//        this.password = PasswordHasher.hashPassword(password);
+        this.wallet = new Wallet(this.id);
     }
 
     public UUID getId() {
@@ -30,8 +27,7 @@ public class User {
         return this.password;
     }
 
-//    public String getSalt() {
-//        return this.salt;
-//    }
-
+    public Wallet getWallet() {
+        return wallet;
+    }
 }

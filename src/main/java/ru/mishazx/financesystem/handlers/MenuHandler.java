@@ -1,8 +1,8 @@
 package ru.mishazx.financesystem.handlers;
 
 import ru.mishazx.financesystem.services.AuthService;
-import ru.mishazx.financesystem.services.DataFileService;
 import ru.mishazx.financesystem.services.DataService;
+import ru.mishazx.financesystem.utils.CustomIO;
 
 import java.io.Console;
 import java.util.Scanner;
@@ -11,6 +11,7 @@ import java.util.UUID;
 public class MenuHandler {
     private final static Scanner scanner = new Scanner(System.in);
     private static boolean isAuthenticated;
+    private static UUID user_id;
 
     public static void printWelcome() {
         System.out.println("Добро пожаловать в лучшую систему учета финансов");
@@ -27,32 +28,54 @@ public class MenuHandler {
         System.out.println("\n1. Просмотреть баланс");
         System.out.println("2. Добавить транзакцию");
         System.out.println("3. Выйти из системы");
+        System.out.println("4. Завершить программу");
         System.out.print("Выберите действие: ");
     }
 
     public static void handleMainMenu() {
         printWelcome();
         while (true) {
+            CustomIO.PrintDebug("[ИНФО] - isAuth ? " + isAuthenticated);
+            CustomIO.PrintDebug("[ИНФО] - user_id: " + user_id);
             if (!isAuthenticated) {
                 printAuthMenu();
                 String choice = readChoice();
                 switch (choice.toUpperCase()) {
                     case "1":
-                        UUID id = AuthService.login();
-                        isAuthenticated = DataService.isValidUserId(id);
+                        user_id = AuthService.login();
+                        isAuthenticated = DataService.isValidUserId(user_id);
                         break;
                     case "2":
                         AuthService.register();
                         break;
                     case "3":
-                        System.out.println("Выход из системы.");
-                        return;
+                        System.exit(0);
+                        break;
                     default:
                         System.out.println("Неверный выбор. Пожалуйста, попробуйте снова.");
                 }
             } else {
                 printUserMenu();
                 String choice = readChoice();
+                switch (choice.toUpperCase()) {
+                    case "1":
+                        double balance = DataService.checkBalance(user_id);
+                        CustomIO.PrintSuccess("Ваш баланс: " + balance);
+                        break;
+                    case "2":
+                        DataService.addTransaction(user_id);
+                        break;
+                    case "3":
+                        CustomIO.PrintSuccess("Выходим из системы! ");
+                        user_id = null;
+                        isAuthenticated = false;
+                        break;
+                    case "4":
+                        System.exit(0);
+                        break;
+                    default:
+                        System.out.println("Неверный выбор. Пожалуйста, попробуйте снова.");
+                }
             }
         }
     }

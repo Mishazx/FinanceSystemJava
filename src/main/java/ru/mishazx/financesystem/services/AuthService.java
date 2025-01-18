@@ -22,7 +22,7 @@ public class AuthService {
                 String hashedPassword = getHashedPassword();
                 User newUser = UserService.createUser(login, hashedPassword);
                 if (newUser != null) {
-                    user_id = newUser.getId(); // Устанавливаем user_id
+                    user_id = newUser.getId();
                     CustomIO.PrintSuccess("Пользователь успешно зарегистрирован!");
                     return user_id;
                 }

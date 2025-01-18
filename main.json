@@ -1,7 +1,20 @@
-[
-  {
-    "id": "cf69342c-2f7c-45b2-bec0-5a3e9b134c82",
-    "username": "Misha",
-    "password": "ba49a11396acd34e783d1e5547af3da677c8df02adb5f3dae15941b1307e655f"
-  }
-]
+{
+  "users": [
+    {
+      "id": "ae182cf2-3999-4594-85c2-3d26f08d28d1",
+      "username": "Misha",
+      "password": "ba49a11396acd34e783d1e5547af3da677c8df02adb5f3dae15941b1307e655f",
+      "wallet": {
+        "balance": -2000.0,
+        "transactions": [
+          {
+            "amount": 2000.0,
+            "category": "Food",
+            "isIncome": false,
+            "dateTime": "2025-01-18T10:57:36.417634651"
+          }
+        ]
+      }
+    }
+  ]
+}

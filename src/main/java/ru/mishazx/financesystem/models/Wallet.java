@@ -1,28 +1,22 @@
 package ru.mishazx.financesystem.models;
 
-import ru.mishazx.financesystem.services.WalletService;
 import ru.mishazx.financesystem.utils.CustomIO;
 import java.util.*;
-
-import static ru.mishazx.financesystem.handlers.MenuHandler.askToTransaction;
 
 public class Wallet {
     private double balance;
     private List<Transaction> transactions;
     private Map<String, Category> categories;
-    private int maxTransactionId; // Поле для хранения максимального идентификатора транзакции
 
-    // Конструктор без параметров для GSON
     public Wallet() {
         this.balance = 0.0;
         this.transactions = new ArrayList<>();
         this.categories = new HashMap<>();
-        this.maxTransactionId = 0; // Инициализация максимального идентификатора
         initializeDefaultCategories();
     }
 
     public Wallet(UUID user_id) {
-        this();  // Вызываем конструктор без параметров
+        this();
     }
 
     private void initializeDefaultCategories() {
@@ -159,6 +153,14 @@ public class Wallet {
             CustomIO.PrintError("Ошибка: индекс транзакции вне диапазона.");
             return;
         }
+
+        String categoryName = newTransaction.getCategory();
+        if (!categories.containsKey(categoryName)) {
+            CustomIO.PrintError("Ошибка: категория '" + categoryName + "' не существует. Доступные категории:");
+            categories.keySet().forEach(cat -> CustomIO.PrintInfo("- " + cat));
+            return;
+        }
+
         transactions.set(index, newTransaction);
         CustomIO.PrintSuccess("Транзакция успешно отредактирована.");
     }

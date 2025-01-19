@@ -1,6 +1,7 @@
 package ru.mishazx.financesystem.models;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 public class Transaction {
     private final int id;
@@ -39,11 +40,12 @@ public class Transaction {
 
     @Override
     public String toString() {
-        return String.format("%s: %.2f руб. (%s) - %s [ID: %d]", 
-            isIncome ? "Доход" : "Расход",
-            Math.abs(amount),
-            category,
-            dateTime,
-            id);
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm:ss");
+        return String.format("%d. %s: %.2f руб. (%s) - %s",
+                id,
+                isIncome ? "Доход" : "Расход",
+                Math.abs(amount),
+                category,
+                dateTime.format(formatter));
     }
 }

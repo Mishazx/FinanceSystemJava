@@ -88,17 +88,18 @@ public class MenuHandler {
                         CustomIO.PrintSuccess("Ваш баланс: " + balance);
                         break;
                     case "2":
-                        List<Transaction> transactionList = WalletService.getAllTransactions(user_id);
-                        CustomIO.PrintSuccess(transactionList.toString());
+                        printTransactions(user_id);
                         break;
                     case "3":
                         WalletService.addTransaction(user_id);
                         break;
                     case "4":
+                        printTransactions(user_id);
                         WalletService.editTransaction(user_id);
                         break;
                     case "5":
-                        handleRemoveTransaction();
+                        printTransactions(user_id);
+                        WalletService.removeTransaction(user_id);
                         break;
                     case "6":
                         WalletService.handleSetBudget(user_id);
@@ -107,7 +108,7 @@ public class MenuHandler {
                         WalletService.showBudgetStatus(user_id);
                         break;
                     case "8":
-                        handleTransfer();
+                        WalletService.transferMoney(user_id);
                         break;
                     case "9":
                         isAuthenticated = false;
@@ -121,46 +122,6 @@ public class MenuHandler {
                     default:
                         System.out.println("Неверный выбор. Пожалуйста, попробуйте снова.");
                 }
-            }
-        }
-    }
-
-
-    private static void handleTransfer() {
-        System.out.print("Введите имя получателя: ");
-        String recipient = scanner.nextLine();
-        System.out.print("Введите сумму перевода: ");
-        try {
-            double amount = Double.parseDouble(scanner.nextLine());
-            WalletService.transferMoney(user_id, recipient, amount);
-        } catch (NumberFormatException e) {
-            CustomIO.PrintError("Неверный формат числа");
-        }
-    }
-
-    private static void handleRemoveTransaction() {
-        List<Transaction> transactions = WalletService.getAllTransactions(user_id);
-
-        while (true) {
-            System.out.print("Введите индекс транзакции для удаления (или 'exit' для выхода): ");
-            String input = scanner.nextLine().trim();
-
-            if (input.equalsIgnoreCase("exit")) {
-                return;
-            }
-
-            try {
-                int removeIndex = Integer.parseInt(input);
-
-                if (removeIndex < 0 || removeIndex >= transactions.size()) {
-                    CustomIO.PrintError("Индекс вне диапазона. Пожалуйста, введите корректный индекс.");
-                    continue;
-                }
-
-                WalletService.removeTransaction(user_id, removeIndex);
-                break;
-            } catch (NumberFormatException e) {
-                CustomIO.PrintError("Неверный ввод. Пожалуйста, введите корректный индекс или 'exit' для выхода.");
             }
         }
     }
@@ -202,6 +163,19 @@ public class MenuHandler {
         String category = scanner.nextLine();
 
         return new Transaction(-1, amount, category);
+    }
+
+    public static void printTransactions(UUID user_id) {
+        List<Transaction> transactions = WalletService.getAllTransactions(user_id);
+        if (transactions.isEmpty()) {
+            System.out.println("Список транзакций пуст."); // Выводим сообщение, если список пуст
+            return; // Если список пуст, ничего не выводим
+        }
+
+        System.out.println("Список транзакций:");
+        for (Transaction transaction : transactions) {
+            System.out.println(transaction); // Вызываем toString() автоматически
+        }
     }
 
     public static boolean askToNoRetry() {

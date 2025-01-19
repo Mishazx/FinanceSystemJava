@@ -1,17 +1,32 @@
 {
   "currentSession": {
-    "userId": "d663ffbd-69ad-4d19-84c7-52643939211e",
-    "token": "27794a6b-330b-480f-9894-76d4af993649",
-    "expiresAt": "2025-02-18T16:19:26.569394204"
+    "userId": "6143f3ee-d438-4064-8716-95b09c2b0373",
+    "token": "24d21e97-393e-4448-8a22-0e6a64aa1598",
+    "expiresAt": "2025-02-18T17:44:08.613386873"
   },
   "users": [
     {
-      "id": "d663ffbd-69ad-4d19-84c7-52643939211e",
+      "id": "6143f3ee-d438-4064-8716-95b09c2b0373",
       "username": "Misha",
       "password": "ba49a11396acd34e783d1e5547af3da677c8df02adb5f3dae15941b1307e655f",
       "wallet": {
-        "balance": 0.0,
-        "transactions": [],
+        "balance": 20000.0,
+        "transactions": [
+          {
+            "id": 1,
+            "amount": 10000.0,
+            "category": "Еда",
+            "isIncome": true,
+            "dateTime": "2025-01-19T17:45:19.718421654"
+          },
+          {
+            "id": 2,
+            "amount": 10000.0,
+            "category": "Зарплата",
+            "isIncome": true,
+            "dateTime": "2025-01-19T18:10:39.454348856"
+          }
+        ],
         "categories": {
           "Прочее": {
             "name": "Прочее",
@@ -43,7 +58,8 @@
             "budgetLimit": 0.0,
             "currentSpent": 0.0
           }
-        }
+        },
+        "maxTransactionId": 0
       }
     }
   ]

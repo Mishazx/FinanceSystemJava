@@ -8,6 +8,7 @@ import ru.mishazx.financesystem.services.WalletService;
 import ru.mishazx.financesystem.utils.CustomIO;
 
 import java.io.Console;
+import java.util.List;
 import java.util.Scanner;
 import java.util.UUID;
 
@@ -29,20 +30,21 @@ public class MenuHandler {
 
     public static void printUserMenu() {
         System.out.println("\n1. Проверить баланс");
-        System.out.println("2. Добавить транзакцию");
-        System.out.println("3. Посмотреть все транзакции");
-        System.out.println("4. Установить бюджет категории");
-        System.out.println("5. Посмотреть статус бюджета");
-        System.out.println("6. Сделать перевод");
-        System.out.println("7. Выйти из аккаунта");
-        System.out.println("8. Выйти из программы");
+        System.out.println("2. Посмотреть все транзакции");
+        System.out.println("3. Добавить транзакцию");
+        System.out.println("4. Редактировать транзакцию");
+        System.out.println("5. Удалить транзакцию");
+        System.out.println("6. Установить бюджет категории");
+        System.out.println("7. Посмотреть статус бюджета");
+        System.out.println("8. Сделать перевод");
+        System.out.println("9. Выйти из аккаунта");
+        System.out.println("10. Выйти из программы");
         System.out.print("Выберите действие: ");
     }
 
     public static void handleMainMenu() {
         printWelcome();
-        
-        // Try to restore session
+
         var session = DataFileService.loadSession();
         if (session != null) {
             user_id = session.getUserId();
@@ -86,27 +88,34 @@ public class MenuHandler {
                         CustomIO.PrintSuccess("Ваш баланс: " + balance);
                         break;
                     case "2":
-                        WalletService.addTransaction(user_id);
+                        List<Transaction> transactionList = WalletService.getAllTransactions(user_id);
+                        CustomIO.PrintSuccess(transactionList.toString());
                         break;
                     case "3":
-                        WalletService.getAllTransactions(user_id);
+                        WalletService.addTransaction(user_id);
                         break;
                     case "4":
-                        handleSetBudget();
+                        WalletService.editTransaction(user_id);
                         break;
                     case "5":
-                        WalletService.showBudgetStatus(user_id);
+                        handleRemoveTransaction();
                         break;
                     case "6":
-                        handleTransfer();
+                        WalletService.handleSetBudget(user_id);
                         break;
                     case "7":
+                        WalletService.showBudgetStatus(user_id);
+                        break;
+                    case "8":
+                        handleTransfer();
+                        break;
+                    case "9":
                         isAuthenticated = false;
                         user_id = null;
                         DataFileService.deleteSession();
                         CustomIO.PrintSuccess("Вы успешно вышли из аккаунта");
                         break;
-                    case "8":
+                    case "10":
                         System.exit(0);
                         break;
                     default:
@@ -116,21 +125,6 @@ public class MenuHandler {
         }
     }
 
-    private static void handleSetBudget() {
-        System.out.print("Введите название категории: ");
-        String category = scanner.nextLine();
-        System.out.print("Введите лимит бюджета: ");
-        try {
-            double limit = Double.parseDouble(scanner.nextLine());
-            if (limit < 0) {
-                CustomIO.PrintError("Лимит бюджета не может быть отрицательным");
-                return;
-            }
-            WalletService.setBudget(user_id, category, limit);
-        } catch (NumberFormatException e) {
-            CustomIO.PrintError("Неверный формат числа");
-        }
-    }
 
     private static void handleTransfer() {
         System.out.print("Введите имя получателя: ");
@@ -141,6 +135,33 @@ public class MenuHandler {
             WalletService.transferMoney(user_id, recipient, amount);
         } catch (NumberFormatException e) {
             CustomIO.PrintError("Неверный формат числа");
+        }
+    }
+
+    private static void handleRemoveTransaction() {
+        List<Transaction> transactions = WalletService.getAllTransactions(user_id);
+
+        while (true) {
+            System.out.print("Введите индекс транзакции для удаления (или 'exit' для выхода): ");
+            String input = scanner.nextLine().trim();
+
+            if (input.equalsIgnoreCase("exit")) {
+                return;
+            }
+
+            try {
+                int removeIndex = Integer.parseInt(input);
+
+                if (removeIndex < 0 || removeIndex >= transactions.size()) {
+                    CustomIO.PrintError("Индекс вне диапазона. Пожалуйста, введите корректный индекс.");
+                    continue;
+                }
+
+                WalletService.removeTransaction(user_id, removeIndex);
+                break;
+            } catch (NumberFormatException e) {
+                CustomIO.PrintError("Неверный ввод. Пожалуйста, введите корректный индекс или 'exit' для выхода.");
+            }
         }
     }
 
@@ -168,6 +189,10 @@ public class MenuHandler {
         double amount;
         try {
             amount = Double.parseDouble(scanner.nextLine());
+            if (amount == 0) {
+                CustomIO.PrintError("Сумма не должна быть равна нулю. Введите положительное или отрицательное число.");
+                return null;
+            }
         } catch (NumberFormatException e) {
             CustomIO.PrintError("Неверный формат числа");
             return null;
@@ -176,7 +201,7 @@ public class MenuHandler {
         System.out.print("Введите категорию: ");
         String category = scanner.nextLine();
 
-        return new Transaction(amount, category);
+        return new Transaction(-1, amount, category);
     }
 
     public static boolean askToNoRetry() {

@@ -3,9 +3,7 @@ package ru.mishazx.financesystem.services;
 import ru.mishazx.financesystem.models.*;
 import ru.mishazx.financesystem.utils.CustomIO;
 
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
 import static ru.mishazx.financesystem.handlers.MenuHandler.askToTransaction;
 
@@ -29,7 +27,9 @@ public class WalletService {
         for (User user : data.getUsers()) {
             if (user.getId().equals(userId)) {
                 Wallet wallet = user.getWallet();
-                wallet.addTransaction(transaction);
+                int id = wallet.getTransactions().size() + 1;
+                Transaction newTransaction = new Transaction(id, transaction.getAmount(), transaction.getCategory());
+                wallet.addTransaction(newTransaction);
 
                 DataFileService.saveData(data);
                 return;
@@ -39,25 +39,24 @@ public class WalletService {
         CustomIO.PrintError("Пользователь не найден.");
     }
 
-    public static void getAllTransactions(UUID userId) {
+    public static List<Transaction> getAllTransactions(UUID userId) {
         Data data = DataFileService.loadData();
+        List<Transaction> transactions = new ArrayList<>();
 
         for (User user : data.getUsers()) {
             if (user.getId().equals(userId)) {
                 Wallet wallet = user.getWallet();
-                List<Transaction> transactions = wallet.getTransactions();
+                transactions = wallet.getTransactions();
+
                 if (transactions.isEmpty()) {
-                    CustomIO.PrintInfo("У вас пока нет транзакций.");
-                } else {
-                    CustomIO.PrintSuccess("Ваши транзакции:");
-                    transactions.forEach(t -> CustomIO.PrintInfo(t.toString()));
+                    CustomIO.PrintError("Список транзакций пуст.");
                 }
-                return;
+                return transactions;
             }
         }
         CustomIO.PrintError("Пользователь не найден.");
+        return transactions;
     }
-
     public static void setBudget(UUID userId, String category, double limit) {
         Data data = DataFileService.loadData();
 
@@ -71,6 +70,23 @@ public class WalletService {
             }
         }
         CustomIO.PrintError("Пользователь не найден.");
+    }
+
+    public static void handleSetBudget(UUID user_id) {
+        Scanner sc = new Scanner(System.in);
+        System.out.print("Введите название категории: ");
+        String category = sc.nextLine();
+        System.out.print("Введите лимит бюджета: ");
+        try {
+            double limit = Double.parseDouble(sc.nextLine());
+            if (limit < 0) {
+                CustomIO.PrintError("Лимит бюджета не может быть отрицательным");
+                return;
+            }
+            WalletService.setBudget(user_id, category, limit);
+        } catch (NumberFormatException e) {
+            CustomIO.PrintError("Неверный формат числа");
+        }
     }
 
     public static void showBudgetStatus(UUID userId) {
@@ -132,14 +148,72 @@ public class WalletService {
             return;
         }
 
-        // Создаем транзакции для обоих пользователей
-        Transaction outgoingTransaction = new Transaction(-amount, "Перевод пользователю " + toUsername);
-        Transaction incomingTransaction = new Transaction(amount, "Перевод от " + fromUser.getUsername());
+        List<Transaction> fromTransactions = fromUser.getWallet().getTransactions();
+        List<Transaction> toTransactions = toUser.getWallet().getTransactions();
+
+        int outgoingId = fromTransactions.size() + 1;
+        Transaction outgoingTransaction = new Transaction(outgoingId, -amount, "Перевод пользователю " + toUsername);
+
+        int incomingId = toTransactions.size() + 1;
+        Transaction incomingTransaction = new Transaction(incomingId, amount, "Перевод от " + fromUser.getUsername());
 
         fromUser.getWallet().addTransaction(outgoingTransaction);
         toUser.getWallet().addTransaction(incomingTransaction);
 
         DataFileService.saveData(data);
         CustomIO.PrintSuccess("Перевод успешно выполнен.");
+    }
+
+    public static void editTransaction(UUID user_id) {
+        Scanner sc = new Scanner(System.in);
+        List<Transaction> transactions = WalletService.getAllTransactions(user_id); // Получаем все транзакции
+
+        while (true) {
+            System.out.print("Введите индекс транзакции для редактирования (или 'exit' для выхода): ");
+            String input = sc.nextLine().trim();
+
+            if (input.equalsIgnoreCase("exit")) {
+                return;
+            }
+
+            try {
+                int editIndex = Integer.parseInt(input);
+
+                if (editIndex < 0 || editIndex >= transactions.size()) {
+                    CustomIO.PrintError("Индекс вне диапазона. Пожалуйста, введите корректный индекс.");
+                    continue;
+                }
+
+                Transaction editedTransaction = askToTransaction();
+                if (editedTransaction != null) {
+                    Data data = DataFileService.loadData();
+                    for (User user : data.getUsers()) {
+                        if (user.getId().equals(user_id)) {
+                            Wallet wallet = user.getWallet();
+                            wallet.editTransaction(editIndex, editedTransaction);
+                            DataFileService.saveData(data);
+                            return;
+                        }
+                    }
+                    CustomIO.PrintError("Пользователь не найден.");
+                }
+                break;
+            } catch (NumberFormatException e) {
+                CustomIO.PrintError("Неверный ввод. Пожалуйста, введите корректный индекс или 'exit' для выхода.");
+            }
+        }
+    }
+
+    public static void removeTransaction(UUID userId, int index) {
+        Data data = DataFileService.loadData();
+        for (User user : data.getUsers()) {
+            if (user.getId().equals(userId)) {
+                Wallet wallet = user.getWallet();
+                wallet.removeTransaction(index);
+                DataFileService.saveData(data);
+                return;
+            }
+        }
+        CustomIO.PrintError("Пользователь не найден.");
     }
 }

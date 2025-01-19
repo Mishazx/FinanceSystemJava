@@ -15,4 +15,9 @@ public class DataService {
         }
         return false;
     }
+
+    public static boolean allowLogin() {
+        Data data = DataFileService.loadData();
+        return !data.getUsers().isEmpty();
+    }
 }

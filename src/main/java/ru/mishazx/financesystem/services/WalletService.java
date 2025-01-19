@@ -32,7 +32,6 @@ public class WalletService {
                 wallet.addTransaction(transaction);
 
                 DataFileService.saveData(data);
-                CustomIO.PrintSuccess("Транзакция успешно добавлена.");
                 return;
             }
         }

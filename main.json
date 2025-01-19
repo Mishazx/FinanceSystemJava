@@ -1,48 +1,18 @@
 {
   "currentSession": {
-    "userId": "2af8d3be-b41c-4354-ba5d-119c925b4d29",
-    "token": "713529bd-ce28-4faa-9f48-de741b2513cb",
-    "expiresAt": "2025-02-17T14:23:40.697501"
+    "userId": "d663ffbd-69ad-4d19-84c7-52643939211e",
+    "token": "27794a6b-330b-480f-9894-76d4af993649",
+    "expiresAt": "2025-02-18T16:19:26.569394204"
   },
   "users": [
     {
-      "id": "2af8d3be-b41c-4354-ba5d-119c925b4d29",
+      "id": "d663ffbd-69ad-4d19-84c7-52643939211e",
       "username": "Misha",
       "password": "ba49a11396acd34e783d1e5547af3da677c8df02adb5f3dae15941b1307e655f",
       "wallet": {
-        "balance": 1760.0,
-        "transactions": [
-          {
-            "amount": 3000.0,
-            "category": "Work",
-            "isIncome": true,
-            "dateTime": "2025-01-18T19:57:23.83565"
-          },
-          {
-            "amount": -1000.0,
-            "category": "Water",
-            "isIncome": false,
-            "dateTime": "2025-01-19T00:21:06.733082"
-          },
-          {
-            "amount": -120.0,
-            "category": "Вода",
-            "isIncome": false,
-            "dateTime": "2025-01-19T00:22:01.349352"
-          },
-          {
-            "amount": -120.0,
-            "category": "Вода",
-            "isIncome": false,
-            "dateTime": "2025-01-19T00:22:49.198609"
-          }
-        ],
+        "balance": 0.0,
+        "transactions": [],
         "categories": {
-          "Water": {
-            "name": "Water",
-            "budgetLimit": 0.0,
-            "currentSpent": 1000.0
-          },
           "Прочее": {
             "name": "Прочее",
             "budgetLimit": 0.0,
@@ -72,11 +42,6 @@
             "name": "Еда",
             "budgetLimit": 0.0,
             "currentSpent": 0.0
-          },
-          "Вода": {
-            "name": "Вода",
-            "budgetLimit": 100.0,
-            "currentSpent": 240.0
           }
         }
       }

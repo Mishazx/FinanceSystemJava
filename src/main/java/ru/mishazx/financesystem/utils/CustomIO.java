@@ -13,7 +13,17 @@ public class CustomIO {
     private static final String WHITE = "\u001B[37m";
     private static final String XZ = "\u001B[38m";
 
-    private static final Boolean debug = ConfigApp.getDebug();
+    public static Boolean debug;
+
+    static {
+        try {
+            // Предположим, что вы загружаете значение debug из конфигурации
+            debug = ConfigApp.getDebug(); // Убедитесь, что этот метод возвращает корректное значение
+        } catch (Exception e) {
+            e.printStackTrace();
+            debug = false; // Установите значение по умолчанию, если произошла ошибка
+        }
+    }
 
     public static void PrintWarning(String print) {
         System.out.println(YELLOW + print + RESET);
@@ -40,7 +50,7 @@ public class CustomIO {
     }
 
     public static void PrintDebug(String print) {
-        if (debug) {
+        if (debug != null && debug) {
             System.out.println(WHITE + print + RESET);
         }
     }

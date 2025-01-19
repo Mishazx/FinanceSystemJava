@@ -10,6 +10,8 @@ import ru.mishazx.financesystem.utils.PasswordHasher;
 
 import java.util.UUID;
 
+import static ru.mishazx.financesystem.services.DataService.allowLogin;
+
 public class AuthService {
     private static UUID user_id;
 
@@ -38,6 +40,11 @@ public class AuthService {
     }
 
     public static UUID login() {
+        boolean isAllowLogin = allowLogin();
+        if (!isAllowLogin) {
+            CustomIO.PrintError("Пользователи отсутствуют в системе! Зарегистрируйтесь!");
+            return null;
+        }
         String login = MenuHandler.readInput("Введите логин: ");
         boolean isLogin = isLoginTaken(login);
         if (isLogin) {

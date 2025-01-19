@@ -49,12 +49,11 @@ public class Wallet {
             return;
         }
 
-        // Проверяем превышение бюджета до добавления транзакции
         if (!transaction.isIncome()) {
             Category category = categories.get(categoryName);
             double newSpent = category.getCurrentSpent() + Math.abs(transaction.getAmount());
             if (category.getBudgetLimit() > 0 && newSpent > category.getBudgetLimit()) {
-                CustomIO.PrintError("Ошибка: транзакция отклонена. Превышен бюджет категории '" + categoryName + "'");
+                CustomIO.PrintWarning("Превышен бюджет категории '" + categoryName + "'");
                 CustomIO.PrintInfo(String.format("Текущие траты: %.2f, Бюджет: %.2f, Пытаетесь потратить: %.2f",
                         category.getCurrentSpent(), category.getBudgetLimit(), Math.abs(transaction.getAmount())));
                 return;

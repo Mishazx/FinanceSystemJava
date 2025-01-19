@@ -15,12 +15,12 @@ import java.time.LocalDateTime;
 import java.util.UUID;
 
 public class DataFileService {
-    public static final String DATABASE_FILE = "main.json";
+    private static final String DATABASE_FILE = "main.json";
     private static final Type DATA_TYPE = new TypeToken<Data>(){}.getType();
     private static final Gson GSON = new GsonBuilder()
-            .registerTypeAdapter(LocalDateTime.class, new LocalDateTimeAdapter())
-            .setPrettyPrinting()
-            .create();
+        .registerTypeAdapter(LocalDateTime.class, new LocalDateTimeAdapter())
+        .setPrettyPrinting()
+        .create();
 
     private static boolean checkData() {
         File db_file = new File(DATABASE_FILE);

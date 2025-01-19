@@ -11,7 +11,7 @@ public class Session {
     public Session(UUID userId) {
         this.userId = userId;
         this.token = UUID.randomUUID().toString();
-        this.expiresAt = LocalDateTime.now().plusDays(30); // Session expires in 30 days
+        this.expiresAt = LocalDateTime.now().plusDays(30);
     }
 
     public UUID getUserId() {

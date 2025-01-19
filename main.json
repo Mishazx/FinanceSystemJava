@@ -1,48 +1,33 @@
 {
   "currentSession": {
-    "userId": "2af8d3be-b41c-4354-ba5d-119c925b4d29",
-    "token": "713529bd-ce28-4faa-9f48-de741b2513cb",
-    "expiresAt": "2025-02-17T14:23:40.697501"
+    "userId": "6143f3ee-d438-4064-8716-95b09c2b0373",
+    "token": "24d21e97-393e-4448-8a22-0e6a64aa1598",
+    "expiresAt": "2025-02-18T17:44:08.613386873"
   },
   "users": [
     {
-      "id": "2af8d3be-b41c-4354-ba5d-119c925b4d29",
+      "id": "6143f3ee-d438-4064-8716-95b09c2b0373",
       "username": "Misha",
       "password": "ba49a11396acd34e783d1e5547af3da677c8df02adb5f3dae15941b1307e655f",
       "wallet": {
-        "balance": 1760.0,
+        "balance": 20000.0,
         "transactions": [
           {
-            "amount": 3000.0,
-            "category": "Work",
+            "id": 1,
+            "amount": 10000.0,
+            "category": "Еда",
             "isIncome": true,
-            "dateTime": "2025-01-18T19:57:23.83565"
+            "dateTime": "2025-01-19T17:45:19.718421654"
           },
           {
-            "amount": -1000.0,
-            "category": "Water",
-            "isIncome": false,
-            "dateTime": "2025-01-19T00:21:06.733082"
-          },
-          {
-            "amount": -120.0,
-            "category": "Вода",
-            "isIncome": false,
-            "dateTime": "2025-01-19T00:22:01.349352"
-          },
-          {
-            "amount": -120.0,
-            "category": "Вода",
-            "isIncome": false,
-            "dateTime": "2025-01-19T00:22:49.198609"
+            "id": 2,
+            "amount": 10000.0,
+            "category": "Зарплата",
+            "isIncome": true,
+            "dateTime": "2025-01-19T18:10:39.454348856"
           }
         ],
         "categories": {
-          "Water": {
-            "name": "Water",
-            "budgetLimit": 0.0,
-            "currentSpent": 1000.0
-          },
           "Прочее": {
             "name": "Прочее",
             "budgetLimit": 0.0,
@@ -72,13 +57,9 @@
             "name": "Еда",
             "budgetLimit": 0.0,
             "currentSpent": 0.0
-          },
-          "Вода": {
-            "name": "Вода",
-            "budgetLimit": 100.0,
-            "currentSpent": 240.0
           }
-        }
+        },
+        "maxTransactionId": 0
       }
     }
   ]

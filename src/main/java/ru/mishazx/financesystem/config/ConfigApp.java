@@ -5,23 +5,20 @@ import io.github.cdimascio.dotenv.DotenvException;
 import ru.mishazx.financesystem.utils.CustomIO;
 
 public class ConfigApp {
-    private static Dotenv dotenv;
     private static Boolean DebugApp;
 
     static {
+        Dotenv dotenv;
         try {
             dotenv = Dotenv.load();
             String debugValue = dotenv.get("DEBUG");
             DebugApp = Boolean.parseBoolean(debugValue);
+            CustomIO.PrintDebug("[ИНФО] - Файл .env загружен! ");
 
         } catch (DotenvException e) {
+            Dotenv.configure().ignoreIfMissing().load();
             CustomIO.PrintError("[ОШИБКА] - Ошибка загрузки .env файла: " + e.getMessage());
-            dotenv = Dotenv.configure().ignoreIfMissing().load();
         }
-    }
-
-    public static Dotenv getDotenv() {
-        return dotenv;
     }
 
     public static boolean getDebug() {

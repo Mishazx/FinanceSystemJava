@@ -1,18 +1,17 @@
 package ru.mishazx.financesystem.models;
 
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 
 public class Transaction {
-    private double amount;
-    private String category;
-    private Boolean isIncome; // true - доход, false - расход
-    private LocalDateTime dateTime;
+    private final double amount;
+    private final String category;
+    private final boolean isIncome;
+    private final LocalDateTime dateTime;
 
-    public Transaction(double amount, String category, Boolean isIncome) {
+    public Transaction(double amount, String category) {
         this.amount = amount;
         this.category = category;
-        this.isIncome = isIncome;
+        this.isIncome = amount >= 0;
         this.dateTime = LocalDateTime.now();
     }
 
@@ -20,19 +19,11 @@ public class Transaction {
         return amount;
     }
 
-    public void setAmount(double amount) {
-        this.amount = amount;
-    }
-
     public String getCategory() {
         return category;
     }
 
-    public void setCategory(String category) {
-        this.category = category;
-    }
-
-    public Boolean getIsIncome() {
+    public boolean isIncome() {
         return isIncome;
     }
 
@@ -40,7 +31,12 @@ public class Transaction {
         return dateTime;
     }
 
-    public String getFormattedDateTime() {
-        return dateTime.format(DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss"));
+    @Override
+    public String toString() {
+        return String.format("%s: %.2f руб. (%s) - %s", 
+            isIncome ? "Доход" : "Расход",
+            Math.abs(amount),
+            category,
+            dateTime);
     }
 }

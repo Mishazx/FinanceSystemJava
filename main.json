@@ -1,19 +1,84 @@
 {
+  "currentSession": {
+    "userId": "2af8d3be-b41c-4354-ba5d-119c925b4d29",
+    "token": "713529bd-ce28-4faa-9f48-de741b2513cb",
+    "expiresAt": "2025-02-17T14:23:40.697501"
+  },
   "users": [
     {
-      "id": "ae182cf2-3999-4594-85c2-3d26f08d28d1",
+      "id": "2af8d3be-b41c-4354-ba5d-119c925b4d29",
       "username": "Misha",
       "password": "ba49a11396acd34e783d1e5547af3da677c8df02adb5f3dae15941b1307e655f",
       "wallet": {
-        "balance": -2000.0,
+        "balance": 1760.0,
         "transactions": [
           {
-            "amount": 2000.0,
-            "category": "Food",
+            "amount": 3000.0,
+            "category": "Work",
+            "isIncome": true,
+            "dateTime": "2025-01-18T19:57:23.83565"
+          },
+          {
+            "amount": -1000.0,
+            "category": "Water",
             "isIncome": false,
-            "dateTime": "2025-01-18T10:57:36.417634651"
+            "dateTime": "2025-01-19T00:21:06.733082"
+          },
+          {
+            "amount": -120.0,
+            "category": "Вода",
+            "isIncome": false,
+            "dateTime": "2025-01-19T00:22:01.349352"
+          },
+          {
+            "amount": -120.0,
+            "category": "Вода",
+            "isIncome": false,
+            "dateTime": "2025-01-19T00:22:49.198609"
           }
-        ]
+        ],
+        "categories": {
+          "Water": {
+            "name": "Water",
+            "budgetLimit": 0.0,
+            "currentSpent": 1000.0
+          },
+          "Прочее": {
+            "name": "Прочее",
+            "budgetLimit": 0.0,
+            "currentSpent": 0.0
+          },
+          "Коммунальные услуги": {
+            "name": "Коммунальные услуги",
+            "budgetLimit": 0.0,
+            "currentSpent": 0.0
+          },
+          "Транспорт": {
+            "name": "Транспорт",
+            "budgetLimit": 0.0,
+            "currentSpent": 0.0
+          },
+          "Развлечения": {
+            "name": "Развлечения",
+            "budgetLimit": 0.0,
+            "currentSpent": 0.0
+          },
+          "Зарплата": {
+            "name": "Зарплата",
+            "budgetLimit": 0.0,
+            "currentSpent": 0.0
+          },
+          "Еда": {
+            "name": "Еда",
+            "budgetLimit": 0.0,
+            "currentSpent": 0.0
+          },
+          "Вода": {
+            "name": "Вода",
+            "budgetLimit": 100.0,
+            "currentSpent": 240.0
+          }
+        }
       }
     }
   ]

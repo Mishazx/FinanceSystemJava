@@ -4,13 +4,15 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonSyntaxException;
 import com.google.gson.reflect.TypeToken;
-import ru.mishazx.financesystem.models.Data; // Импортируйте новый класс Data
+import ru.mishazx.financesystem.models.Data;
+import ru.mishazx.financesystem.models.Session;
 import ru.mishazx.financesystem.utils.CustomIO;
 import ru.mishazx.financesystem.utils.LocalDateTimeAdapter;
 
 import java.io.*;
 import java.lang.reflect.Type;
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 public class DataFileService {
     public static final String DATABASE_FILE = "main.json";
@@ -26,7 +28,7 @@ public class DataFileService {
             try {
                 if (db_file.createNewFile()) {
                     try (Writer writer = new FileWriter(db_file)) {
-                        GSON.toJson(new Data(), DATA_TYPE, writer); // Сохраняем пустой объект Data
+                        GSON.toJson(new Data(), DATA_TYPE, writer);
                     }
                     CustomIO.PrintSuccess("[ИНФО] - Создан новый файл базы данных: " + DATABASE_FILE);
                     return false;
@@ -56,7 +58,7 @@ public class DataFileService {
 
     public static Data loadData() {
         if (checkData()) {
-            return new Data(); // Возвращаем новый объект Data
+            return new Data();
         }
 
         try (Reader reader = new FileReader(DATABASE_FILE)) {
@@ -70,5 +72,32 @@ public class DataFileService {
             CustomIO.PrintError("Ошибка при загрузке данных: " + e.getMessage(), true);
             return new Data();
         }
+    }
+
+    public static void saveSession(UUID userId) {
+        Data data = loadData();
+        Session session = new Session(userId);
+        data.setCurrentSession(session);
+        saveData(data);
+        CustomIO.PrintDebug("[ИНФО] - Сессия сохранена");
+    }
+
+    public static Session loadSession() {
+        Data data = loadData();
+        Session session = data.getCurrentSession();
+        
+        if (session != null && session.isValid() && DataService.isValidUserId(session.getUserId())) {
+            return session;
+        } else {
+            deleteSession();
+            return null;
+        }
+    }
+
+    public static void deleteSession() {
+        Data data = loadData();
+        data.setCurrentSession(null);
+        saveData(data);
+        CustomIO.PrintDebug("[ИНФО] - Сессия удалена");
     }
 }

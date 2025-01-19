@@ -4,12 +4,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Data {
+    private Session currentSession;
     private final List<User> users;
-//    private final User currentUser;
 
-    // Конструкторы, геттеры и сеттеры
+
     public Data() {
-//        this.currentUser = currentUser;
+        this.currentSession = null;
         this.users = new ArrayList<>();
     }
 
@@ -17,7 +17,11 @@ public class Data {
         return users;
     }
 
-//    public void setUsers(List<User> users) {
-//        this.users = users;
-//    }
+    public Session getCurrentSession() {
+        return currentSession;
+    }
+
+    public void setCurrentSession(Session session) {
+        this.currentSession = session;
+    }
 }

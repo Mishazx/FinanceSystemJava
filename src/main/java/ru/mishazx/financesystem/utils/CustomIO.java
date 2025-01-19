@@ -17,11 +17,10 @@ public class CustomIO {
 
     static {
         try {
-            // Предположим, что вы загружаете значение debug из конфигурации
-            debug = ConfigApp.getDebug(); // Убедитесь, что этот метод возвращает корректное значение
+            debug = ConfigApp.getDebug();
         } catch (Exception e) {
             e.printStackTrace();
-            debug = false; // Установите значение по умолчанию, если произошла ошибка
+            debug = false;
         }
     }
 

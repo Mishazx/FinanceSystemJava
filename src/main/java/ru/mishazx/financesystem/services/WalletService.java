@@ -190,10 +190,10 @@ public class WalletService {
         List<Transaction> toTransactions = toUser.getWallet().getTransactions();
 
         int outgoingId = fromTransactions.size() + 1;
-        Transaction outgoingTransaction = new Transaction(outgoingId, -amount, "Перевод пользователю " + toUsername);
+        Transaction outgoingTransaction = new Transaction(outgoingId, -amount, "Прочее");
 
         int incomingId = toTransactions.size() + 1;
-        Transaction incomingTransaction = new Transaction(incomingId, amount, "Перевод от " + fromUser.getUsername());
+        Transaction incomingTransaction = new Transaction(incomingId, amount, "Прочее");
 
         fromUser.getWallet().addTransaction(outgoingTransaction);
         toUser.getWallet().addTransaction(incomingTransaction);

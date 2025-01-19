@@ -1,30 +1,80 @@
 {
   "currentSession": {
-    "userId": "b915daa0-ae22-4070-bcb0-a9df66e06868",
-    "token": "7785a201-57d0-46b5-b8ba-f5aafd961e89",
-    "expiresAt": "2025-02-18T22:47:39.889476418"
+    "userId": "79ac8879-e933-46e3-858c-f6e3a0c79fbc",
+    "token": "7ab6fe7b-f3da-4c57-80a0-c028529234c8",
+    "expiresAt": "2025-02-18T22:56:29.850429072"
   },
   "users": [
     {
-      "id": "b915daa0-ae22-4070-bcb0-a9df66e06868",
+      "id": "5b261bab-bd24-441d-af6f-a814e9d56097",
       "username": "Misha",
       "password": "ba49a11396acd34e783d1e5547af3da677c8df02adb5f3dae15941b1307e655f",
       "wallet": {
-        "balance": 18000.0,
+        "balance": 80000.0,
+        "transactions": [
+          {
+            "id": 1,
+            "amount": 100000.0,
+            "category": "Зарплата",
+            "isIncome": true,
+            "dateTime": "2025-01-19T22:54:45.515558075"
+          },
+          {
+            "id": 2,
+            "amount": -20000.0,
+            "category": "Прочее",
+            "isIncome": false,
+            "dateTime": "2025-01-19T22:56:16.307983304"
+          }
+        ],
+        "categories": {
+          "Прочее": {
+            "name": "Прочее",
+            "budgetLimit": 0.0,
+            "currentSpent": 20000.0
+          },
+          "Коммунальные услуги": {
+            "name": "Коммунальные услуги",
+            "budgetLimit": 0.0,
+            "currentSpent": 0.0
+          },
+          "Транспорт": {
+            "name": "Транспорт",
+            "budgetLimit": 0.0,
+            "currentSpent": 0.0
+          },
+          "Развлечения": {
+            "name": "Развлечения",
+            "budgetLimit": 0.0,
+            "currentSpent": 0.0
+          },
+          "Зарплата": {
+            "name": "Зарплата",
+            "budgetLimit": 0.0,
+            "currentSpent": 0.0
+          },
+          "Еда": {
+            "name": "Еда",
+            "budgetLimit": 0.0,
+            "currentSpent": 0.0
+          }
+        },
+        "maxTransactionId": 0
+      }
+    },
+    {
+      "id": "79ac8879-e933-46e3-858c-f6e3a0c79fbc",
+      "username": "Evgenia",
+      "password": "47f9e9933f0fe19e61e2c1a1969ea17db5e915c3d517f4c108a95e76f3964ea6",
+      "wallet": {
+        "balance": 20000.0,
         "transactions": [
           {
             "id": 1,
             "amount": 20000.0,
-            "category": "Зарплата",
+            "category": "Прочее",
             "isIncome": true,
-            "dateTime": "2025-01-19T22:47:46.899193348"
-          },
-          {
-            "id": 2,
-            "amount": -2000.0,
-            "category": "Еда",
-            "isIncome": false,
-            "dateTime": "2025-01-19T22:47:55.947107515"
+            "dateTime": "2025-01-19T22:56:16.308052674"
           }
         ],
         "categories": {
@@ -56,7 +106,7 @@
           "Еда": {
             "name": "Еда",
             "budgetLimit": 0.0,
-            "currentSpent": 2000.0
+            "currentSpent": 0.0
           }
         },
         "maxTransactionId": 0

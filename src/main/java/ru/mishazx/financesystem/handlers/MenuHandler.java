@@ -185,30 +185,37 @@ public class MenuHandler {
     }
 
     private static void handleEditTransaction() {
-        List<Transaction> transactions = WalletService.getAllTransactions(user_id); // Получаем все транзакции
+        List<Transaction> transactions = WalletService.getAllTransactions(user_id);
 
         while (true) {
             System.out.print("Введите индекс транзакции для редактирования (или 'exit' для выхода): ");
             String input = scanner.nextLine().trim();
 
-            // Проверка на выход
             if (input.equalsIgnoreCase("exit")) {
-                return; // Выход из метода
+                return;
             }
 
             try {
-                int editIndex = Integer.parseInt(input);
+                int editIndex = Integer.parseInt(input) - 1;
 
                 if (editIndex < 0 || editIndex >= transactions.size()) {
                     CustomIO.PrintError("Индекс вне диапазона. Пожалуйста, введите корректный индекс.");
                     continue;
                 }
 
-                Transaction editedTransaction = askToTransaction(editIndex);
-                if (editedTransaction != null) {
-                    WalletService.editTransaction(user_id, editIndex, editedTransaction);
-                }
-                break; // Выход из цикла, если редактирование прошло успешно
+                Transaction existingTransaction = transactions.get(editIndex);
+
+                CustomIO.PrintInfo("Введите новую сумму (отрицательная для расхода, положительная для дохода) [" + existingTransaction.getAmount() + "]: ");
+                String amountInput = scanner.nextLine();
+                double amount = amountInput.isEmpty() ? existingTransaction.getAmount() : Double.parseDouble(amountInput);
+
+                CustomIO.PrintInfo("Введите новую категорию [" + existingTransaction.getCategory() + "]: ");
+                String category = scanner.nextLine();
+                category = category.isEmpty() ? existingTransaction.getCategory() : category;
+
+                Transaction editedTransaction = new Transaction(existingTransaction.getId(), amount, category);
+                WalletService.editTransaction(user_id, editIndex, editedTransaction);
+                break;
             } catch (NumberFormatException e) {
                 CustomIO.PrintError("Неверный ввод. Пожалуйста, введите корректный индекс или 'exit' для выхода.");
             }
@@ -216,28 +223,26 @@ public class MenuHandler {
     }
 
     private static void handleRemoveTransaction() {
-        List<Transaction> transactions = WalletService.getAllTransactions(user_id); // Получаем все транзакции
+        List<Transaction> transactions = WalletService.getAllTransactions(user_id);
 
         while (true) {
-            System.out.print("Введите индекс транзакции для удаления (или 'exit' для выхода): ");
+            CustomIO.PrintInfo("Введите индекс транзакции для удаления (или 'exit' для выхода): ");
             String input = scanner.nextLine().trim();
 
-            // Проверка на выход
             if (input.equalsIgnoreCase("exit")) {
-                return; // Выход из метода
+                return;
             }
 
             try {
-                int removeIndex = Integer.parseInt(input) - 1; // Пробуем преобразовать ввод в целое число и уменьшаем на 1
-                
-                // Проверка существования транзакции
+                int removeIndex = Integer.parseInt(input) - 1;
+
                 if (removeIndex < 0 || removeIndex >= transactions.size()) {
                     CustomIO.PrintError("Индекс вне диапазона. Пожалуйста, введите корректный индекс.");
-                    continue; // Возвращаемся к началу цикла
+                    continue;
                 }
 
                 WalletService.removeTransaction(user_id, removeIndex);
-                break; // Выход из цикла, если удаление прошло успешно
+                break;
             } catch (NumberFormatException e) {
                 CustomIO.PrintError("Неверный ввод. Пожалуйста, введите корректный индекс или 'exit' для выхода.");
             }

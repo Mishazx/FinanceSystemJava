@@ -159,6 +159,14 @@ public class Wallet {
             CustomIO.PrintError("Ошибка: индекс транзакции вне диапазона.");
             return;
         }
+
+        String categoryName = newTransaction.getCategory();
+        if (!categories.containsKey(categoryName)) {
+            CustomIO.PrintError("Ошибка: категория '" + categoryName + "' не существует. Доступные категории:");
+            categories.keySet().forEach(cat -> CustomIO.PrintInfo("- " + cat));
+            return;
+        }
+
         transactions.set(index, newTransaction);
         CustomIO.PrintSuccess("Транзакция успешно отредактирована.");
     }

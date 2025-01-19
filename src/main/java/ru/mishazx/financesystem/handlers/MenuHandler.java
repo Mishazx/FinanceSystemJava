@@ -91,15 +91,16 @@ public class MenuHandler {
                         printTransactions(user_id);
                         break;
                     case "3":
+                        printTransactions(user_id);
                         WalletService.addTransaction(user_id);
                         break;
                     case "4":
                         printTransactions(user_id);
-                        WalletService.editTransaction(user_id);
+                        handleEditTransaction();
                         break;
                     case "5":
                         printTransactions(user_id);
-                        WalletService.removeTransaction(user_id);
+                        handleRemoveTransaction();
                         break;
                     case "6":
                         WalletService.handleSetBudget(user_id);
@@ -145,7 +146,7 @@ public class MenuHandler {
         }
     }
 
-    public static Transaction askToTransaction() {
+    public static Transaction askToTransaction(int index) {
         System.out.print("Введите сумму (отрицательная для расхода, положительная для дохода): ");
         double amount;
         try {
@@ -162,24 +163,84 @@ public class MenuHandler {
         System.out.print("Введите категорию: ");
         String category = scanner.nextLine();
 
-        return new Transaction(-1, amount, category);
+        return new Transaction(index, amount, category);
     }
 
     public static void printTransactions(UUID user_id) {
         List<Transaction> transactions = WalletService.getAllTransactions(user_id);
         if (transactions.isEmpty()) {
-            System.out.println("Список транзакций пуст."); // Выводим сообщение, если список пуст
-            return; // Если список пуст, ничего не выводим
+            CustomIO.PrintError("Список транзакций пуст.");
+            return;
         }
 
         System.out.println("Список транзакций:");
         for (Transaction transaction : transactions) {
-            System.out.println(transaction); // Вызываем toString() автоматически
+            System.out.println(transaction);
         }
     }
 
     public static boolean askToNoRetry() {
         String input = scanner.nextLine().toLowerCase();
         return input.equals("да") || input.equals("yes") || input.equals("y");
+    }
+
+    private static void handleEditTransaction() {
+        List<Transaction> transactions = WalletService.getAllTransactions(user_id); // Получаем все транзакции
+
+        while (true) {
+            System.out.print("Введите индекс транзакции для редактирования (или 'exit' для выхода): ");
+            String input = scanner.nextLine().trim();
+
+            // Проверка на выход
+            if (input.equalsIgnoreCase("exit")) {
+                return; // Выход из метода
+            }
+
+            try {
+                int editIndex = Integer.parseInt(input);
+
+                if (editIndex < 0 || editIndex >= transactions.size()) {
+                    CustomIO.PrintError("Индекс вне диапазона. Пожалуйста, введите корректный индекс.");
+                    continue;
+                }
+
+                Transaction editedTransaction = askToTransaction(editIndex);
+                if (editedTransaction != null) {
+                    WalletService.editTransaction(user_id, editIndex, editedTransaction);
+                }
+                break; // Выход из цикла, если редактирование прошло успешно
+            } catch (NumberFormatException e) {
+                CustomIO.PrintError("Неверный ввод. Пожалуйста, введите корректный индекс или 'exit' для выхода.");
+            }
+        }
+    }
+
+    private static void handleRemoveTransaction() {
+        List<Transaction> transactions = WalletService.getAllTransactions(user_id); // Получаем все транзакции
+
+        while (true) {
+            System.out.print("Введите индекс транзакции для удаления (или 'exit' для выхода): ");
+            String input = scanner.nextLine().trim();
+
+            // Проверка на выход
+            if (input.equalsIgnoreCase("exit")) {
+                return; // Выход из метода
+            }
+
+            try {
+                int removeIndex = Integer.parseInt(input) - 1; // Пробуем преобразовать ввод в целое число и уменьшаем на 1
+                
+                // Проверка существования транзакции
+                if (removeIndex < 0 || removeIndex >= transactions.size()) {
+                    CustomIO.PrintError("Индекс вне диапазона. Пожалуйста, введите корректный индекс.");
+                    continue; // Возвращаемся к началу цикла
+                }
+
+                WalletService.removeTransaction(user_id, removeIndex);
+                break; // Выход из цикла, если удаление прошло успешно
+            } catch (NumberFormatException e) {
+                CustomIO.PrintError("Неверный ввод. Пожалуйста, введите корректный индекс или 'exit' для выхода.");
+            }
+        }
     }
 }

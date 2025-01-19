@@ -38,16 +38,6 @@ public class Transaction {
         return dateTime;
     }
 
-//    @Override
-//    public String toString() {
-//        return String.format("%s: %.2f руб. (%s) - %s [ID: %d]",
-//            isIncome ? "Доход" : "Расход",
-//            Math.abs(amount),
-//            category,
-//            dateTime,
-//            id);
-//    }
-
     @Override
     public String toString() {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm:ss");

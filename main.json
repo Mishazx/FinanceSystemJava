@@ -1,30 +1,30 @@
 {
   "currentSession": {
-    "userId": "6143f3ee-d438-4064-8716-95b09c2b0373",
-    "token": "24d21e97-393e-4448-8a22-0e6a64aa1598",
-    "expiresAt": "2025-02-18T17:44:08.613386873"
+    "userId": "b915daa0-ae22-4070-bcb0-a9df66e06868",
+    "token": "7785a201-57d0-46b5-b8ba-f5aafd961e89",
+    "expiresAt": "2025-02-18T22:47:39.889476418"
   },
   "users": [
     {
-      "id": "6143f3ee-d438-4064-8716-95b09c2b0373",
+      "id": "b915daa0-ae22-4070-bcb0-a9df66e06868",
       "username": "Misha",
       "password": "ba49a11396acd34e783d1e5547af3da677c8df02adb5f3dae15941b1307e655f",
       "wallet": {
-        "balance": 20000.0,
+        "balance": 18000.0,
         "transactions": [
           {
             "id": 1,
-            "amount": 10000.0,
-            "category": "Еда",
+            "amount": 20000.0,
+            "category": "Зарплата",
             "isIncome": true,
-            "dateTime": "2025-01-19T17:45:19.718421654"
+            "dateTime": "2025-01-19T22:47:46.899193348"
           },
           {
             "id": 2,
-            "amount": 10000.0,
-            "category": "Зарплата",
-            "isIncome": true,
-            "dateTime": "2025-01-19T18:10:39.454348856"
+            "amount": -2000.0,
+            "category": "Еда",
+            "isIncome": false,
+            "dateTime": "2025-01-19T22:47:55.947107515"
           }
         ],
         "categories": {
@@ -56,7 +56,7 @@
           "Еда": {
             "name": "Еда",
             "budgetLimit": 0.0,
-            "currentSpent": 0.0
+            "currentSpent": 2000.0
           }
         },
         "maxTransactionId": 0

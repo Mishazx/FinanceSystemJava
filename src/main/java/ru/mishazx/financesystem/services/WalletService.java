@@ -24,12 +24,12 @@ public class WalletService {
 
     public static void addTransaction(UUID userId) {
         Data data = DataFileService.loadData();
-        Transaction transaction = askToTransaction();
 
         for (User user : data.getUsers()) {
             if (user.getId().equals(userId)) {
                 Wallet wallet = user.getWallet();
                 int id = wallet.getTransactions().size() + 1;
+                Transaction transaction = askToTransaction(id);
                 Transaction newTransaction = new Transaction(id, transaction.getAmount(), transaction.getCategory());
                 wallet.addTransaction(newTransaction);
 
@@ -49,10 +49,6 @@ public class WalletService {
             if (user.getId().equals(userId)) {
                 Wallet wallet = user.getWallet();
                 transactions = wallet.getTransactions();
-
-                if (transactions.isEmpty()) {
-                    CustomIO.PrintError("Список транзакций пуст.");
-                }
                 return transactions;
             }
         }
@@ -75,20 +71,11 @@ public class WalletService {
         CustomIO.PrintError("Пользователь не найден.");
     }
 
-    public static void removeTransaction(UUID user_id) {
+    public static void removeTransaction(UUID user_id, int removeIndex) {
         List<Transaction> transactions = WalletService.getAllTransactions(user_id);
 
         while (true) {
-            System.out.print("Введите индекс транзакции для удаления (или 'exit' для выхода): ");
-            String input = sc.nextLine().trim();
-
-            if (input.equalsIgnoreCase("exit")) {
-                return;
-            }
-
             try {
-                int removeIndex = Integer.parseInt(input);
-
                 if (removeIndex < 0 || removeIndex >= transactions.size()) {
                     CustomIO.PrintError("Индекс вне диапазона. Пожалуйста, введите корректный индекс.");
                     continue;
@@ -215,42 +202,16 @@ public class WalletService {
         CustomIO.PrintSuccess("Перевод успешно выполнен.");
     }
 
-    public static void editTransaction(UUID user_id) {
-        List<Transaction> transactions = WalletService.getAllTransactions(user_id);
-
-        while (true) {
-            System.out.print("Введите индекс транзакции для редактирования (или 'exit' для выхода): ");
-            String input = sc.nextLine().trim();
-
-            if (input.equalsIgnoreCase("exit")) {
+    public static void editTransaction(UUID userId, int index, Transaction newTransaction) {
+        Data data = DataFileService.loadData();
+        for (User user : data.getUsers()) {
+            if (user.getId().equals(userId)) {
+                Wallet wallet = user.getWallet();
+                wallet.editTransaction(index, newTransaction);
+                DataFileService.saveData(data);
                 return;
             }
-
-            try {
-                int editIndex = Integer.parseInt(input);
-
-                if (editIndex < 0 || editIndex >= transactions.size()) {
-                    CustomIO.PrintError("Индекс вне диапазона. Пожалуйста, введите корректный индекс.");
-                    continue;
-                }
-
-                Transaction editedTransaction = askToTransaction();
-                if (editedTransaction != null) {
-                    Data data = DataFileService.loadData();
-                    for (User user : data.getUsers()) {
-                        if (user.getId().equals(user_id)) {
-                            Wallet wallet = user.getWallet();
-                            wallet.editTransaction(editIndex, editedTransaction);
-                            DataFileService.saveData(data);
-                            return;
-                        }
-                    }
-                    CustomIO.PrintError("Пользователь не найден.");
-                }
-                break;
-            } catch (NumberFormatException e) {
-                CustomIO.PrintError("Неверный ввод. Пожалуйста, введите корректный индекс или 'exit' для выхода.");
-            }
         }
+        CustomIO.PrintError("Пользователь не найден.");
     }
 }
